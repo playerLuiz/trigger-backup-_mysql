@@ -1,0 +1,39 @@
+//Criamos a database
+create database alunos;
+
+//Entramos na database criada
+use alunos;
+
+
+//Criamos uma tabela
+create table aluno(idaluno int primary key auto_increment, nome varchar (50), idade int, sexo char(1), email varchar(30));
+
+
+//Inserimos informações na tabela criada
+insert into aluno values(null,"Luiz","26","M","luiz@gmail.com");
+insert into aluno values(null,"Paulo","13","M","paulo@gmail.com");
+
+
+//Criamos uma tabela para servir de backup para as linha deletadas + colocamos o current_timestamp para pegar a data e hora automaticamente do sistema
+create table backup_aluno(
+	idbackup int primary key auto_increment, idaluno int, nome varchar(50), idade int, sexo char(1), email varchar(30), operacao varchar(30),operacao_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	
+);
+
+
+//Criamos um trigger(gatilho)
+create trigger bkp_aluno before delete on aluno for each row
+begin
+	insert into backup_aluno values(null,old.idaluno,old.nome,old.idade,old.sexo,old.email,"Deletado");
+end$
+
+
+//Deletamos a linha 
+delete from aluno where idaluno = 1;
+
+//Conferindo a tabela de backup
+select * from backup_pessoa;
+
+
+
+
